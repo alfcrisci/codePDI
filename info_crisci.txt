@@ -1,0 +1,339 @@
+consumption=dlmread('Consumption_data.csv);
+
+%%%% SINGLE COUNTRY
+
+for i=1:length(COUNTRY)
+	COUNTRY_cons_average_adolescent(i)=Adolescent_mean(i)/Adolescent_weight(i);
+	COUNTRY_cons_p95_adolescent(i)=Adolescent_p95(i)/Adolescent_weight(i);
+	COUNTRY_cons_average_adult(i)=Adult_mean(i)/Adult_weight(i);
+	COUNTRY_cons_p95_adult(i)=Adult_p95(i)/Adult_weight(i);
+	COUNTRY_cons_average_elderly(i)=Elderly_mean(i)/Elderly_weight(i);
+	COUNTRY_cons_p95_elderly(i)=Elderly_p95(i)/Elderly_weight(i);
+end
+	
+%%% ALL TOGETHER	
+	
+ALL_cons_average_adolescent=mean(Adolescent_mean)./mean(Adolescent_weight)
+ALL_cons_p95_adolescent=mean(Adolescent_p95)./mean(Adolescent_weight)
+
+ALL_cons_average_adult=mean(Adult_mean)./mean(Adult_weight)
+ALL_cons_p95_adult=mean(Adult_p95)./mean(Adult_weight)
+
+ALL_cons_average_elderly=mean(Elderly_mean)./mean(Elderly_weight)
+ALL_cons_p95_elderly=mean(Elderly_p95)./mean(Elderly_weight)
+
+%%%%% read occurrence&co_final_RP 
+
+open all_cereals_FINALE_RP_29_07.xls
+
+for sample_country = 1:n
+
+if co_occurrence == 0 && sampMatType == food && sampMatbased == wheat | oat | barley | triticale | spelt | sorghum | rye | cereals | rice | buckwheat | maize
+
+if paramType == AcDONs | 15AcDON | 3AcDON | 15AcDON+3AcDON | aZEL | aZEL4G | DON | DON3G | FB1 | FB1+FB2 | FB2 | FB3 | FBs | NIV | OTA | ßZEL | ßZEL4G | T2+HT2 | ZEN | ZEN4G | ZEN4S | ZEN16G
+
+%% WRITE ALL DATA MEDIUM LOW AND UPPER BOUND (MB, LB, UB)
+
+if meanTot>0 |meanPos>0 | Concentration>0 save value
+
+else  %%%% (if LOD==NAN => LOD=5; if LOQ==NAN => LOQ=10)
+
+   meanTot==-1 |meanPos==-1 | Concentration==-1 save value=0 for LB
+   meanTot==-2 |meanPos==-2 | Concentration==-2 save value=resLOD for LB
+
+   meanTot==-1 |meanPos==-1 | Concentration==-1 save value=0.5*resLOD for MB
+   meanTot==-2 |meanPos==-2 | Concentration==-2 save value=0.5*resLOQ for MB
+   
+   meanTot==-1 |meanPos==-1 | Concentration==-1 save value=resLOD for UB
+   meanTot==-2 |meanPos==-2 | Concentration==-2 save value=resLOQ for UB
+   
+   for n records write
+   
+   sample_country; MB; LB; UB 
+   
+   end
+   end
+   end
+   end
+end	
+
+for scenario=MB | LB | UB
+	for country = 1:n
+	for paramtype == AcDONs | 15AcDON | 3AcDON | 15AcDON+3AcDON | aZEL | aZEL4G | DON | DON3G | FB1 | FB1+FB2 | FB2 | FB3 | FBs | NIV | OTA | ßZEL | ßZEL4G | T2+HT2 | ZEN | ZEN4G | ZEN4S | ZEN16G
+
+	DONeq= AcDONs + 15AcDON + 3AcDON + 15AcDON+3AcDON +DON + DON3G
+	
+write toxin concentration including lb_mean(paramtype= DONeq & NIV & T2+HT2), mb_mean(paramtype= DONeq & NIV & T2+HT2), ub_mean(paramtype= DONeq & NIV & T2+HT2)
+
+end
+
+%%% MACROAREA
+
+
+BALKGREE=HR,RS,BA,MK,SI,BG,GR,CY
+
+BALTIC=EE,LV,LT
+
+EEUROPA= SK,HU,RO,PL
+
+ENG=IE,GB
+
+IBERIA=ES,PT
+
+ITALIA=IT,MT
+
+MIDDLEEU=FR,CH,AT,BE,NL,DE,CZ,DK
+
+SCAND=NO,SE,FI
+
+ALL= all countries
+	
+%%% calcola exposure per ogni fascia età
+
+for macroarea=1:n
+
+EXP_DON_LB_m_OCC_ADO=ALL_cons_average_adolescent/1000 *  DONeqtoxin concentration_lb_mean
+EXP_DON_LB_95_OCC_ADO=ALL_cons_p95_adolescent/1000 *  DONeqtoxin concentration_lb_mean
+
+EXP_DON_MB_m_OCC_ADO=ALL_cons_average_adolescent/1000 *  DONeqtoxin concentration_mb_mean
+EXP_DON_MB_95_OCC_ADO=ALL_cons_p95_adolescent/1000 *  DONeqtoxin concentration_mb_mean
+
+EXP_DON_UB_m_OCC_ADO=ALL_cons_average_adolescent/1000 *  DONeqtoxin concentration_ub_mean
+EXP_DON_UB_95_OCC_ADO=ALL_cons_p95_adolescent/1000 *  DONeqtoxin concentration_ub_mean
+
+EXP_NIV_LB_m_OCC_ADO=ALL_cons_average_adolescent/1000 *  NIVtoxin concentration_lb_mean
+EXP_NIV_LB_95_OCC_ADO=ALL_cons_p95_adolescent/1000 *  NIVtoxin concentration_lb_mean
+
+EXP_NIV_MB_m_OCC_ADO=ALL_cons_average_adolescent/1000 *  NIVtoxin concentration_mb_mean
+EXP_NIV_MB_95_OCC_ADO=ALL_cons_p95_adolescent/1000 *  NIVtoxin concentration_mb_mean
+
+EXP_NIV_UB_m_OCC_ADO=ALL_cons_average_adolescent/1000 *  NIVtoxin concentration_ub_mean
+EXP_NIV_UB_95_OCC_ADO=ALL_cons_p95_adolescent/1000 *  NIVtoxin concentration_ub_mean
+
+EXP_T2+HT2_LB_m_OCC_ADO=ALL_cons_average_adolescent/1000 *  T2+HT2toxin concentration_lb_mean
+EXP_T2+HT2_LB_95_OCC_ADO=ALL_cons_p95_adolescent/1000 *  T2+HT2toxin concentration_lb_mean
+
+EXP_T2+HT2_MB_m_OCC_ADO=ALL_cons_average_adolescent/1000 *  T2+HT2toxin concentration_mb_mean
+EXP_T2+HT2_MB_95_OCC_ADO=ALL_cons_p95_adolescent/1000 *  T2+HT2toxin concentration_mb_mean
+
+EXP_T2+HT2_UB_m_OCC_ADO=ALL_cons_average_adolescent/1000 *  T2+HT2toxin concentration_ub_mean
+EXP_T2+HT2_UB_95_OCC_ADO=ALL_cons_p95_adolescent/1000 *  T2+HT2toxin concentration_ub_mean
+
+EXP_DON_LB_m_OCC_ADU=ALL_cons_average_adult/1000 *  DONeqtoxin concentration_lb_mean
+EXP_DON_LB_95_OCC_ADU=ALL_cons_p95_adult/1000 *  DONeqtoxin concentration_lb_mean
+
+EXP_DON_MB_m_OCC_ADU=ALL_cons_average_adult/1000 *  DONeqtoxin concentration_mb_mean
+EXP_DON_MB_95_OCC_ADU=ALL_cons_p95_adult/1000 *  DONeqtoxin concentration_mb_mean
+
+EXP_DON_UB_m_OCC_ADU=ALL_cons_average_adult/1000 *  DONeqtoxin concentration_ub_mean
+EXP_DON_UB_95_OCC_ADU=ALL_cons_p95_adult/1000 *  DONeqtoxin concentration_ub_mean
+
+EXP_NIV_LB_m_OCC_ADU=ALL_cons_average_adult/1000 *  NIVtoxin concentration_lb_mean
+EXP_NIV_LB_95_OCC_ADU=ALL_cons_p95_adult/1000 *  NIVtoxin concentration_lb_mean
+
+EXP_NIV_MB_m_OCC_ADU=ALL_cons_average_adult/1000 *  NIVtoxin concentration_mb_mean
+EXP_NIV_MB_95_OCC_ADU=ALL_cons_p95_adult/1000 *  NIVtoxin concentration_mb_mean
+
+EXP_NIV_UB_m_OCC_ADU=ALL_cons_average_adult/1000 *  NIVtoxin concentration_ub_mean
+EXP_NIV_UB_95_OCC_ADU=ALL_cons_p95_adult/1000 *  NIVtoxin concentration_ub_mean
+
+EXP_T2+HT2_LB_m_OCC_ADU=ALL_cons_average_adult/1000 *  T2+HT2toxin concentration_lb_mean
+EXP_T2+HT2_LB_95_OCC_ADU=ALL_cons_p95_adult/1000 *  T2+HT2toxin concentration_lb_mean
+
+EXP_T2+HT2_MB_m_OCC_ADU=ALL_cons_average_adult/1000 *  T2+HT2toxin concentration_mb_mean
+EXP_T2+HT2_MB_95_OCC_ADU=ALL_cons_p95_adult/1000 *  T2+HT2toxin concentration_mb_mean
+
+EXP_T2+HT2_UB_m_OCC_ADU=ALL_cons_average_adult/1000 *  T2+HT2toxin concentration_ub_mean
+EXP_T2+HT2_UB_95_OCC_ADU=ALL_cons_p95_adult/1000 *  T2+HT2toxin concentration_ub_mean
+
+EXP_DON_LB_m_OCC_ELD=ALL_cons_average_elderly/1000 *  DONeqtoxin concentration_lb_mean
+EXP_DON_LB_95_OCC_ELD=ALL_cons_p95_elderly/1000 *  DONeqtoxin concentration_lb_mean
+
+EXP_DON_MB_m_OCC_ELD=ALL_cons_average_elderly/1000 *  DONeqtoxin concentration_mb_mean
+EXP_DON_MB_95_OCC_ELD=ALL_cons_p95_elderly/1000 *  DONeqtoxin concentration_mb_mean
+
+EXP_DON_UB_m_OCC_ELD=ALL_cons_average_elderly/1000 *  DONeqtoxin concentration_ub_mean
+EXP_DON_UB_95_OCC_ELD=ALL_cons_p95_elderly/1000 *  DONeqtoxin concentration_ub_mean
+
+EXP_NIV_LB_m_OCC_ELD=ALL_cons_average_elderly/1000 *  NIVtoxin concentration_lb_mean
+EXP_NIV_LB_95_OCC_ELD=ALL_cons_p95_elderly/1000 *  NIVtoxin concentration_lb_mean
+
+EXP_NIV_MB_m_OCC_ELD=ALL_cons_average_elderly/1000 *  NIVtoxin concentration_mb_mean
+EXP_NIV_MB_95_OCC_ELD=ALL_cons_p95_elderly/1000 *  NIVtoxin concentration_mb_mean
+
+EXP_NIV_UB_m_OCC_ELD=ALL_cons_average_elderly/1000 *  NIVtoxin concentration_ub_mean
+EXP_NIV_UB_95_OCC_ELD=ALL_cons_p95_elderly/1000 *  NIVtoxin concentration_ub_mean
+
+EXP_T2+HT2_LB_m_OCC_ELD=ALL_cons_average_elderly/1000 *  T2+HT2toxin concentration_lb_mean
+EXP_T2+HT2_LB_95_OCC_ELD=ALL_cons_p95_elderly/1000 *  T2+HT2toxin concentration_lb_mean
+
+EXP_T2+HT2_MB_m_OCC_ELD=ALL_cons_average_elderly/1000 *  T2+HT2toxin concentration_mb_mean
+EXP_T2+HT2_MB_95_OCC_ELD=ALL_cons_p95_elderly/1000 *  T2+HT2toxin concentration_mb_mean
+
+EXP_T2+HT2_UB_m_OCC_ELD=ALL_cons_average_elderly/1000 *  T2+HT2toxin concentration_ub_mean
+EXP_T2+HT2_UB_95_OCC_ELD=ALL_cons_p95_elderly/1000 *  T2+HT2toxin concentration_ub_mean
+
+end
+
+%%%PDI per DON, NIV, T2+HT2
+
+DON = 110
+NIV = 350
+T2+HT2 = 3.33
+
+%%%% EQUIVALENT FACTOR , sarebbero i Relative potency factor
+
+EF_T2+HT2=1
+EF_DON=0.03
+EF_NIV=0.0095
+
+%%% EXPOSITION FOR SINGLE MYCOTOXIN
+
+for macroarea=1:n
+
+EF_DON_LB_m_OCC_ADO=EXP_DON_LB_m_OCC_ADO*EF_DON
+EF_DON_LB_95_OCC_ADO=EXP_DON_LB_95_OCC_ADO*EF_DON
+
+EF_DON_MB_m_OCC_ADO=EXP_DON_MB_m_OCC_ADO*EF_DON	
+EF_DON_MB_95_OCC_ADO=EXP_DON_MB_95_OCC_ADO*EF_DON	
+
+EF_DON_UB_m_OCC_ADO=EXP_DON_UB_m_OCC_ADO*EF_DON	
+EF_DON_UB_95_OCC_ADO=EXP_DON_UB_95_OCC_ADO*EF_DON	
+
+EF_NIV_LB_m_OCC_ADO=EXP_NIV_LB_m_OCC_ADO*EF_NIV	
+EF_NIV_LB_95_OCC_ADO=EXP_NIV_LB_95_OCC_ADO*EF_NIV	
+
+EF_NIV_MB_m_OCC_ADO=EXP_NIV_MB_m_OCC_ADO*EF_NIV	
+EF_NIV_MB_95_OCC_ADO=EXP_NIV_MB_95_OCC_ADO*EF_NIV	
+
+EF_NIV_UB_m_OCC_ADO=EXP_NIV_UB_m_OCC_ADO*EF_NIV
+EF_NIV_UB_95_OCC_ADO=EXP_NIV_UB_95_OCC_ADO*EF_NIV	
+
+EF_T2+HT2_LB_m_OCC_ADO=EXP_T2+HT2_LB_m_OCC_ADO*EF_T2+HT2
+EF_T2+HT2_LB_95_OCC_ADO=EXP_T2+HT2_LB_95_OCC_ADO*EF_T2+HT2
+
+EF_T2+HT2_MB_m_OCC_ADO=EXP_T2+HT2_MB_m_OCC_ADO*EF_T2+HT2
+EF_T2+HT2_MB_95_OCC_ADO=EXP_T2+HT2_MB_95_OCC_ADO*EF_T2+HT2
+
+EF_T2+HT2_UB_m_OCC_ADO=EXP_T2+HT2_UB_m_OCC_ADO*EF_T2+HT2
+EF_T2+HT2_UB_95_OCC_ADO=EXP_T2+HT2_UB_95_OCC_ADO*EF_T2+HT2
+
+EF_DON_LB_m_OCC_ADU=EXP_DON_LB_m_OCC_ADU*EF_DON		
+EF_DON_LB_95_OCC_ADU=EXP_DON_LB_95_OCC_ADU*EF_DON		
+
+EF_DON_MB_m_OCC_ADU=EXP_DON_MB_m_OCC_ADU*EF_DON		
+EF_DON_MB_95_OCC_ADU=EXP_DON_MB_95_OCC_ADU*EF_DON		
+
+EF_DON_UB_m_OCC_ADU=EXP_DON_UB_m_OCC_ADU*EF_DON		
+EF_DON_UB_95_OCC_ADU=EXP_DON_UB_95_OCC_ADU*EF_DON		
+
+EF_NIV_LB_m_OCC_ADU=EXP_NIV_LB_m_OCC_ADU*EF_NIV	
+EF_NIV_LB_95_OCC_ADU=	 EXP_NIV_LB_95_OCC_ADU*EF_NIV	
+
+EF_NIV_MB_m_OCC_ADU=EXP_NIV_MB_m_OCC_ADU*EF_NIV
+EF_NIV_MB_95_OCC_ADU=EXP_NIV_MB_95_OCC_ADU*EF_NIV
+
+EF_NIV_UB_m_OCC_ADU=EXP_NIV_UB_m_OCC_ADU*EF_NIV
+EF_NIV_UB_95_OCC_ADU=EXP_NIV_UB_95_OCC_ADU*EF_NIV	
+
+EF_T2+HT2_LB_m_OCC_ADU=EXP_T2+HT2_LB_m_OCC_ADU*EF_T2+HT2
+EF_T2+HT2_LB_95_OCC_ADU=EXP_T2+HT2_LB_95_OCC_ADU*EF_T2+HT2
+
+EF_T2+HT2_MB_m_OCC_ADU=EXP_T2+HT2_MB_m_OCC_ADU*EF_T2+HT2
+EF_T2+HT2_MB_95_OCC_ADU=EXP_T2+HT2_MB_95_OCC_ADU*EF_T2+HT2
+
+EF_T2+HT2_UB_m_OCC_ADU=EXP_T2+HT2_UB_m_OCC_ADU*EF_T2+HT2
+EF_T2+HT2_UB_95_OCC_ADU=EXP_T2+HT2_UB_95_OCC_ADU*EF_T2+HT2
+
+EF_DON_LB_m_OCC_ELD=EXP_DON_LB_m_OCC_ELD*EF_DON		
+EF_DON_LB_95_OCC_ELD=EXP_DON_LB_95_OCC_ELD*EF_DON		
+
+EF_DON_MB_m_OCC_ELD=EXP_DON_MB_m_OCC_ELD*EF_DON		
+EF_DON_MB_95_OCC_ELD=EXP_DON_MB_95_OCC_ELD*EF_DON		
+
+EF_DON_UB_m_OCC_ELD=EXP_DON_UB_m_OCC_ELD*EF_DON		
+EF_DON_UB_95_OCC_ELD=EXP_DON_UB_95_OCC_ELD*EF_DON		
+
+EF_NIV_LB_m_OCC_ELD=EXP_NIV_LB_m_OCC_ELD*EF_NIV
+EF_NIV_LB_95_OCC_ELD=EXP_NIV_LB_95_OCC_ELD*EF_NIV		
+
+EF_NIV_MB_m_OCC_ELD=EXP_NIV_MB_m_OCC_ELD*EF_NIV	
+EF_NIV_MB_95_OCC_ELD=EXP_NIV_MB_95_OCC_ELD*EF_NIV	
+
+EF_NIV_UB_m_OCC_ELD=EXP_NIV_UB_m_OCC_ELD*EF_NIV	
+EF_NIV_UB_95_OCC_ELD=EXP_NIV_UB_95_OCC_ELD*EF_NIV	
+
+EF_T2+HT2_LB_m_OCC_ELD=EXP_T2+HT2_LB_m_OCC_ELD*EF_T2+HT2
+EF_T2+HT2_LB_95_OCC_ELD=EXP_T2+HT2_LB_95_OCC_ELD*EF_T2+HT2
+
+EF_T2+HT2_MB_m_OCC_ELD=EXP_T2+HT2_MB_m_OCC_ELD*EF_T2+HT2
+EF_T2+HT2_MB_95_OCC_ELD=EXP_T2+HT2_MB_95_OCC_ELD*EF_T2+HT2
+
+EF_T2+HT2_UB_m_OCC_ELD=EXP_T2+HT2_UB_m_OCC_ELD*EF_T2+HT2
+EF_T2+HT2_UB_95_OCC_ELD=EXP_T2+HT2_UB_95_OCC_ELD*EF_T2+HT2
+
+end
+
+%%%%% SUM OF EXPOSITION-combined dose addition
+
+for macroarea=1:n
+
+Sum_EF_LB_m_OCC_ADO=EF_DON_LB_m_OCC_ADO+EF_NIV_LB_m_OCC_ADO+EF_T2+HT2_LB_m_OCC_ADO
+Sum_EF_LB_95_OCC_ADO=EF_DON_LB_95_OCC_ADO+EF_NIV_LB_95_OCC_ADO+EF_T2+HT2_LB_95_OCC_ADO
+
+Sum_EF_MB_m_OCC_ADO=EF_DON_MB_m_OCC_ADO+EF_NIV_MB_m_OCC_ADO+EF_T2+HT2_MB_m_OCC_ADO
+Sum_EF_MB_95_OCC_ADO=EF_DON_MB_95_OCC_ADO+EF_NIV_MB_95_OCC_ADO+EF_T2+HT2_MB_95_OCC_ADO
+
+Sum_EF_UB_m_OCC_ADO=EF_DON_UB_m_OCC_ADO+EF_NIV_UB_m_OCC_ADO+EF_T2+HT2_UB_m_OCC_ADO
+Sum_EF_UB_95_OCC_ADO=EF_DON_UB_95_OCC_ADO+EF_NIV_UB_95_OCC_ADO+EF_T2+HT2_UB_95_OCC_ADO
+
+Sum_EF_LB_m_OCC_ADU=EF_DON_LB_m_OCC_ADU+EF_NIV_LB_m_OCC_ADU+EF_T2+HT2_LB_m_OCC_ADU
+Sum_EF_LB_95_OCC_ADU=EF_DON_LB_95_OCC_ADU+EF_NIV_LB_95_OCC_ADU+EF_T2+HT2_LB_95_OCC_ADU
+
+Sum_EF_MB_m_OCC_ADU=EF_DON_MB_m_OCC_ADU+EF_NIV_MB_m_OCC_ADU+EF_T2+HT2_MB_m_OCC_ADU
+Sum_EF_MB_95_OCC_ADU=EF_DON_MB_95_OCC_ADU+EF_NIV_MB_95_OCC_ADU+EF_T2+HT2_MB_95_OCC_ADU
+
+Sum_EF_UB_m_OCC_ADU=EF_DON_UB_m_OCC_ADU+EF_NIV_UB_m_OCC_ADU+EF_T2+HT2_UB_m_OCC_ADU
+Sum_EF_UB_95_OCC_ADU=EF_DON_UB_95_OCC_ADU+EF_NIV_UB_95_OCC_ADU+EF_T2+HT2_UB_95_OCC_ADU
+
+Sum_EF_LB_m_OCC_ELD=EF_DON_LB_m_OCC_ELD+EF_NIV_LB_m_OCC_ELD+EF_T2+HT2_LB_m_OCC_ELD
+Sum_EF_LB_95_OCC_ELD=EF_DON_LB_95_OCC_ELD+EF_NIV_LB_95_OCC_ELD+EF_T2+HT2_LB_95_OCC_ELD
+
+Sum_EF_MB_m_OCC_ELD=EF_DON_MB_m_OCC_ELD+EF_NIV_MB_m_OCC_ELD+EF_T2+HT2_MB_m_OCC_ELD
+Sum_EF_MB_95_OCC_ELD=EF_DON_MB_95_OCC_ELD+EF_NIV_MB_95_OCC_ELD+EF_T2+HT2_MB_95_OCC_ELD
+
+Sum_EF_UB_m_OCC_ELD=EF_DON_UB_m_OCC_ELD+EF_NIV_UB_m_OCC_ELD+EF_T2+HT2_UB_m_OCC_ELD
+Sum_EF_UB_95_OCC_ELD=EF_DON_UB_95_OCC_ELD+EF_NIV_UB_95_OCC_ELD+EF_T2+HT2_UB_95_OCC_ELD
+
+end
+
+%%%%% MOE - margin of exposure
+
+MOE_LB_m_OCC_ADO=3.33/Sum_EF_LB_m_OCC_ADO
+MOE_LB_95_OCC_ADO=3.33/Sum_EF_LB_95_OCC_ADO
+
+MOE_MB_m_OCC_ADO=3.33/Sum_EF_MB_m_OCC_ADO
+MOE_MB_95_OCC_ADO=3.33/Sum_EF_MB_95_OCC_ADO
+
+MOE_UB_m_OCC_ADO=3.33/Sum_EF_UB_m_OCC_ADO
+MOE_UB_95_OCC_ADO=3.33/Sum_EF_UB_95_OCC_ADO
+
+MOE_LB_m_OCC_ADU=3.33/Sum_EF_LB_m_OCC_ADU
+MOE_LB_95_OCC_ADU=3.33/Sum_EF_LB_95_OCC_ADU
+
+MOE_MB_m_OCC_ADU=3.33/Sum_EF_MB_m_OCC_ADU
+MOE_MB_95_OCC_ADU=3.33/Sum_EF_MB_95_OCC_ADU
+
+
+
+
+MOE_UB_95_OCC_ADU=3.33/Sum_EF_UB_95_OCC_ADU
+
+MOE_LB_m_OCC_ELD=3.33/Sum_EF_LB_m_OCC_ELD
+MOE_LB_95_OCC_ELD=3.33/Sum_EF_LB_95_OCC_ELD
+
+MOE_MB_m_OCC_ELD=3.33/Sum_EF_MB_m_OCC_ELD
+MOE_MB_95_OCC_ELD=3.33/Sum_EF_MB_95_OCC_ELD
+
+MOE_UB_m_OCC_ELD=3.33/Sum_EF_UB_m_OCC_ELD
+MOE_UB_95_OCC_ELD=3.33/Sum_EF_UB_95_OCC_ELD
